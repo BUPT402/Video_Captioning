@@ -19,7 +19,7 @@ def get_max_len(path):
         for ele in files:
             if ele.endswith('json'):
                 lst.append(root+'/'+ele)
-    print lst
+    print (lst)
     cnt = []
     for ele in lst:
         a = json.load(open(ele))
@@ -76,7 +76,7 @@ def generate_h5py(X, y, q, fname, dataset, feature_folder_name, batch_start = 0)
     q_idx = 0
     f_txt = open(os.path.join(dirname, dataset + '.txt'), 'w')
     mapping = json.load(open('msvd2sent.json'))
-    for i in xrange(batch_start, batch_start + batch_num):
+    for i in range(batch_start, batch_start + batch_num):
         train_filename = os.path.join(dirname, dataset + str(i) + '.h5')
         if os.path.isfile(train_filename):
             q_idx += BATCH_SIZE
@@ -90,7 +90,7 @@ def generate_h5py(X, y, q, fname, dataset, feature_folder_name, batch_start = 0)
             f['reindex'] = np.zeros(MAX_LEN)
             fname_tmp = []
             title_tmp = []
-            for j in xrange(BATCH_SIZE):
+            for j in range(BATCH_SIZE):
                 X_id = np.where(q == q_idx)[0]
                 #while(len(X_id) == 0 or not check_HL_nonHL_exist(y[X_id])):
                 while(len(X_id) == 0):
@@ -274,7 +274,7 @@ def driver(inp_type, f_type, Rep_type, outp_folder_name):
 
 def getlist(path, split):
     List = glob.glob(path+split+'*.h5')
-    print path+split+'.txt'
+    print (path+split+'.txt')
     f = open(path+split+'.txt','w')
     for ele in List:
         f.write(ele+'\n')

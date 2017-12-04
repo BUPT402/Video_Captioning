@@ -333,7 +333,7 @@ def get_video_data_jukin(video_data_path_train, video_data_path_val, video_data_
         batch_data = h5py.File(ele)
         batch_fname = batch_data['fname']
         batch_title = batch_data['title']
-        for i in xrange(len(batch_fname)):
+        for i in range(len(batch_fname)):
                 fname.append(batch_fname[i])
                 title.append(batch_title[i])
         batch_data.close()
@@ -343,7 +343,7 @@ def get_video_data_jukin(video_data_path_train, video_data_path_val, video_data_
         batch_data = h5py.File(ele)
         batch_fname = batch_data['fname']
         batch_title = batch_data['title']
-        for i in xrange(len(batch_fname)):
+        for i in range(len(batch_fname)):
                 fname.append(batch_fname[i])
                 title.append(batch_title[i])
         batch_data.close()
@@ -367,7 +367,7 @@ def get_video_data_jukin(video_data_path_train, video_data_path_val, video_data_
     return video_data, video_list_train, video_list_val, video_list_test
 
 def preProBuildWordVocab(sentence_iterator, word_count_threshold=5): # borrowed this function from NeuralTalk
-    print 'preprocessing word counts and creating vocab based on word count threshold %d' % (word_count_threshold, )
+    print ('preprocessing word counts and creating vocab based on word count threshold %d' % (word_count_threshold, ))
     word_counts = {}
     nsents = 0
     for sent in sentence_iterator:
@@ -376,7 +376,7 @@ def preProBuildWordVocab(sentence_iterator, word_count_threshold=5): # borrowed 
            word_counts[w] = word_counts.get(w, 0) + 1
 
     vocab = [w for w in word_counts if word_counts[w] >= word_count_threshold]
-    print 'filtered words from %d to %d' % (len(word_counts), len(vocab))
+    print ('filtered words from %d to %d' % (len(word_counts), len(vocab)))
 
     ixtoword = {}
     ixtoword[0] = '.'  # period at the end of the sentence. make first dimension be end token
@@ -424,7 +424,7 @@ def testing_one_multi_gt(sess, video_feat_path, ixtoword, counter, video_tf, vid
     if 'tracker_mask' in test_data_batch.keys():
         tracker_mask = np.array(test_data_batch['tracker_mask'])
    
-    for ind in xrange(batch_size):
+    for ind in range(batch_size):
         video_feat[ind,:,:] = test_data_batch['data'][:n_frame_step,ind,:]
         idx = np.where(test_data_batch['label'][:,ind] != -1)[0]
         if(len(idx) == 0):
@@ -433,7 +433,7 @@ def testing_one_multi_gt(sess, video_feat_path, ixtoword, counter, video_tf, vid
     generated_word_index = sess.run(caption_tf, feed_dict={video_tf:video_feat, video_mask_tf:video_mask,tracker_tf:tracker, tracker_mask_tf:tracker_mask})
     
     #print video_feat_path
-    for ind in xrange(batch_size):
+    for ind in range(batch_size):
         cap_key = test_data_batch['fname'][ind]
         if cap_key == '':
             continue
@@ -573,7 +573,7 @@ def train():
 #            current_tracker = tracker_queue.get()
             current_batch_data = data_queue.get()
             current_batch_title = title_queue.get()
-            for ind in xrange(batch_size):
+            for ind in range(batch_size):
                 current_feats[ind,:,:] = current_batch_data[:,ind,:]
                 idx = np.where(current_batch['label'][:,ind] != -1)[0]
                 if len(idx) == 0:
@@ -613,13 +613,13 @@ def train():
         t1.join()
 #       t2.join()
         t3.join()
-        print "Epoch:", epoch, " done. Loss:", np.mean(loss_epoch)
+        print ("Epoch:", epoch, " done. Loss:", np.mean(loss_epoch))
         tStop_epoch = time.time()
-        print "Epoch Time Cost:", round(tStop_epoch - tStart_epoch,2), "s"
+        print ("Epoch Time Cost:", round(tStop_epoch - tStart_epoch,2), "s")
 	sys.stdout.flush()
 
         if np.mod(epoch, 2) == 0:
-            print "Epoch ", epoch, " is done. Saving the model ..."
+            print ("Epoch ", epoch, " is done. Saving the model ...")
     	    with tf.device('/cpu:0'):
             	saver.save(sess, os.path.join(model_path, 'model'), global_step=epoch)
         if np.mod(epoch, 10) == 0:
@@ -638,11 +638,11 @@ def train():
             scorer = COCOScorer()
             total_score = scorer.score(gt_dict, pred_dict, id_list)
 
-    print "Finally, saving the model ..."
+    print ("Finally, saving the model ...")
     with tf.device('/cpu:0'):
 	    saver.save(sess, os.path.join(model_path, 'model'), global_step=n_epochs)
     tStop_total = time.time()
-    print "Total Time Cost:", round(tStop_total - tStart_total,2), "s"
+    print ("Total Time Cost:", round(tStop_total - tStart_total,2), "s")
 
 def test(model_path='models/model-900', video_feat_path=video_feat_path):
     meta_data, train_data, val_data, test_data = get_video_data_jukin(video_data_path_train, video_data_path_val, video_data_path_test)

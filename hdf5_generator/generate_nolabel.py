@@ -14,10 +14,10 @@ def splitdata(path, train_num, val_num):
     for ele in lst:
         name.append(os.path.splitext(ele)[0])
 
-    print len(name)
-    print name[0:100]
+    print (len(name))
+    print (name[0:100])
     name = np.random.permutation(name)
-    print name[0:100]
+    print (name[0:100])
 
     train = name[0:train_num]
     val = name[train_num:train_num+val_num]
@@ -28,8 +28,8 @@ def splitdata(path, train_num, val_num):
 def get_total_frame_number(fn):
     cap = cv2.VideoCapture(fn)
     if not cap.isOpened():
-        print "could not open :",fn
-        sys.exit() 
+        print ("could not open :",fn)
+        os.sys.exit()
     length = float(cap.get(cv2.cv.CV_CAP_PROP_FRAME_COUNT))
     return length
 
@@ -80,12 +80,12 @@ def get_label_list(fname):
 
 if __name__=='__main__':
     b = getlist(video_path)
-    print b
+    print (b)
     count = 0
     for ele in b:
         fname = ele
         if not os.path.isfile(output_path+str(fname)+'.json'):
             get_label_list(fname)
         count += 1
-    print count
+    print (count)
 

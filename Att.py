@@ -7,7 +7,7 @@ import pdb
 import time
 import json
 from collections import defaultdict
-from tensorflow.models.rnn import rnn, rnn_cell
+from tensorflow.contrib import rnn
 from keras.preprocessing import sequence
 from cocoeval import COCOScorer
 import unicodedata
@@ -55,8 +55,8 @@ class Video_Caption_Generator():
         with tf.device("/cpu:0"):
             self.Wemb = tf.Variable(tf.random_uniform([n_words, dim_hidden], -0.1, 0.1), name='Wemb')
 
-        self.lstm3 = rnn_cell.LSTMCell(self.dim_hidden,2*self.dim_hidden,use_peepholes = True)
-        self.lstm3_dropout = rnn_cell.DropoutWrapper(self.lstm3,output_keep_prob=1 - self.drop_out_rate)
+        self.lstm3 = tf.nn.rnn_cell.LSTMCell(self.dim_hidden,2*self.dim_hidden,use_peepholes = True)
+        self.lstm3_dropout = tf.nn.rnn_cell.DropoutWrapper(self.lstm3,output_keep_prob=1 - self.drop_out_rate)
 
         self.encode_image_W = tf.Variable( tf.random_uniform([dim_image, dim_hidden], -0.1, 0.1), name='encode_image_W')
         self.encode_image_b = tf.Variable( tf.zeros([dim_hidden]), name='encode_image_b')
@@ -226,7 +226,7 @@ def get_video_data_jukin(video_data_path_train, video_data_path_val, video_data_
         batch_data = h5py.File(ele)
         batch_fname = batch_data['fname']
         batch_title = batch_data['title']
-        for i in xrange(len(batch_fname)):
+        for i in range(len(batch_fname)):
                 fname.append(batch_fname[i])
                 title.append(batch_title[i])
                 train_title.append(batch_title[i])
@@ -236,7 +236,7 @@ def get_video_data_jukin(video_data_path_train, video_data_path_val, video_data_
         batch_data = h5py.File(ele)
         batch_fname = batch_data['fname']
         batch_title = batch_data['title']
-        for i in xrange(len(batch_fname)):
+        for i in range(len(batch_fname)):
                 fname.append(batch_fname[i])
                 title.append(batch_title[i])
 
@@ -266,7 +266,7 @@ def preProBuildWordVocab(sentence_iterator, word_count_threshold=5): # borrowed 
            word_counts[w] = word_counts.get(w, 0) + 1
 
     vocab = [w for w in word_counts if word_counts[w] >= word_count_threshold]
-    print 'filtered words from %d to %d' % (len(word_counts), len(vocab))
+    print ('filtered words from %d to %d' % (len(word_counts), len(vocab)))
 
     ixtoword = {}
     ixtoword[0] = '.'  # period at the end of the sentence. make first dimension be end token
